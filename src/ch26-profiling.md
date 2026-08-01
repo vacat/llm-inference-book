@@ -120,7 +120,7 @@ ds4: decode detail layer 1 attn hc=0.11 q=0.33 kv=0.10 rope=0.05
 
 | 变量 | 作用 |
 |------|------|
-| `DS4_TOKEN_TIMING=1` | 每 token 计时 |
+| `DS4_TOKEN_TIMING=1` | 每 token 计时（仅 argmax 路径，需 `--temp 0`） |
 | `DS4_MTP_PROBE=1` | MTP 草稿命中率 |
 | `DS4_MTP_TIMING=1` | MTP 推测解码计时 |
 | `DS4_METAL_MATH_SAFE=1` | 关闭 fastMath 诊断数值漂移 |

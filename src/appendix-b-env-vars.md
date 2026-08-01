@@ -5,7 +5,7 @@
 | 变量 | 作用 | 示例 |
 |------|------|------|
 | `DS4_DECODE_PROFILE_DETAIL=1` | 逐层逐算子计时，定位 decode 瓶颈 | `DS4_DECODE_PROFILE_DETAIL=1 ./ds4 -p "test" -n 10` |
-| `DS4_TOKEN_TIMING=1` | 每个 token 的生成时间 | `DS4_TOKEN_TIMING=1 ./ds4 -p "你好" -n 20` |
+| `DS4_TOKEN_TIMING=1` | 每个 token 的生成时间（仅 argmax 路径，需 `--temp 0`） | `DS4_TOKEN_TIMING=1 ./ds4 -p "你好" -n 20 --temp 0` |
 | `DS4_MTP_PROBE=1` | 观察 MTP 草稿命中率 | `DS4_MTP_PROBE=1 ./ds4 -p "test" -n 50` |
 | `DS4_MTP_TIMING=1` | MTP 推测解码各阶段计时 | `DS4_MTP_TIMING=1 ./ds4 -p "test" -n 50` |
 | `DS4_METAL_STREAMING_SELECTED_READAHEAD_PROFILE=1` | 专家预取耗时 profile | 配合 `--ssd-streaming` 使用 |
@@ -46,7 +46,7 @@
 
 ## 使用建议
 
-- **定位 decode 慢**：`DS4_DECODE_PROFILE_DETAIL=1` + `DS4_TOKEN_TIMING=1`
+- **定位 decode 慢**：`DS4_DECODE_PROFILE_DETAIL=1` + `DS4_TOKEN_TIMING=1`（后者需配 `--temp 0` 才生效）
 - **验证推测解码**：`DS4_MTP_PROBE=1` 看命中率
 - **诊断数值问题**：`DS4_METAL_MATH_SAFE=1` 排除 fastMath 影响
 - **性能对比**：先跑基线，再开优化，用 `ds4-bench --csv` 对比

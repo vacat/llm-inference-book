@@ -8,6 +8,29 @@
 
 ---
 
+## 对应的 ds4 版本
+
+本书基于以下 ds4 版本编写，书中所有源码行号均对应此版本：
+
+| 项目 | 值 |
+|------|-----|
+| 仓库 | [antirez/ds4](https://github.com/antirez/ds4) |
+| 分支 | `main` |
+| Commit | [`54b36ed`](https://github.com/antirez/ds4/commit/54b36ed9ba42da31b24f2d1a5feb075c2475dbb1) |
+| 提交日期 | 2026-07-28 |
+| 提交说明 | Merge pull request #617 from kyuz0/fix/rocm-distributed-glm |
+
+> **注意**：ds4 是一个快速迭代的项目，代码变更频繁。如果你使用的是更新版本的 ds4，部分行号可能已偏移。遇到对不上的情况，请用 `git checkout 54b36ed` 切换到本书对应的版本，或用函数名搜索定位。
+
+```bash
+# 获取本书对应的 ds4 版本
+git clone https://github.com/antirez/ds4.git
+cd ds4
+git checkout 54b36ed
+```
+
+---
+
 ## 如何使用本书
 
 - **读法**：按章节顺序阅读，每章先看"本章导读"建立预期，再读原理讲解，最后对照源码逐行理解。
@@ -34,6 +57,7 @@
 ```bash
 git clone https://github.com/antirez/ds4.git
 cd ds4
+git checkout 54b36ed    # 切换到本书对应的版本
 make
 ./ds4 --inspect
 ```

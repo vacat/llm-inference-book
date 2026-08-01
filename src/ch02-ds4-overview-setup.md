@@ -235,8 +235,8 @@ ds4: model size: XX GB
 加一些环境变量可以看到更多信息：
 
 ```bash
-# 显示每个 token 的生成时间
-DS4_TOKEN_TIMING=1 ./ds4 -p "你好" -n 20
+# 显示每个 token 的生成时间（注意：必须加 --temp 0 走 argmax 路径才生效）
+DS4_TOKEN_TIMING=1 ./ds4 -p "你好" -n 20 --temp 0
 
 # 限制生成 20 个 token（-n 参数）
 # 观察首字延迟和后续每个 token 的耗时差异
@@ -293,7 +293,7 @@ rm /tmp/ds4.lock
 ## 动手实验
 
 1. 编译 ds4（`make`），运行 `./ds4 --inspect`，记下模型的 `n_layer`、`n_expert`、`n_head` 三个值
-2. 运行 `DS4_TOKEN_TIMING=1 ./ds4 -p "1+1等于几" -n 10`，观察首字延迟和后续 token 速度的差异
+2. 运行 `DS4_TOKEN_TIMING=1 ./ds4 -p "1+1等于几" -n 10 --temp 0`，观察首字延迟和后续 token 速度的差异（注意：`--temp 0` 让 CLI 走 argmax 路径，`DS4_TOKEN_TIMING` 只在 argmax 路径生效；默认 temperature=1.0 会走 session 路径，该变量不生效）
 3. 运行 `./ds4-bench --help`（如果有的话）或查看 `ds4_bench.c:554` 的 main 函数，了解基准测试支持哪些参数
 
 ## 下一章预告
