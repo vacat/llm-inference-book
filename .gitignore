@@ -1,0 +1,15 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Build artifacts (if any future tooling is added)
+*.pdf
+*.epub
+node_modules/
