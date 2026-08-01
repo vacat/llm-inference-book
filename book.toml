@@ -1,0 +1,28 @@
+[book]
+title = "大模型推理技术详解"
+authors = ["Javen.C"]
+language = "zh"
+src = "src"
+description = "面向普通技术人员的大模型推理技术教程，结合 ds4 源码逐行讲解"
+
+[output.html]
+default-theme = "light"
+preferred-dark-theme = "ayu"
+git-repository-url = "https://github.com/vacat/llm-inference-book"
+edit-url-template = "https://github.com/vacat/llm-inference-book/edit/main/src/{path}"
+additional-css = ["theme/custom.css"]
+
+# 启用中文搜索
+[output.html.search]
+enable = true
+limit-results = 30
+use-boolean-and = true
+boost-title = 2
+boost-hierarchy = 1
+boost-paragraph = 1
+expand = true
+heading-split-level = 3
+
+[output.html.fold]
+enable = true
+level = 0

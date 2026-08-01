@@ -1,0 +1,102 @@
+/* 中文排版优化 */
+
+/* 正文字体 - 优先使用系统中文字体 */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+                 "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 1.8;
+}
+
+/* 标题字体 */
+h1, h2, h3, h4, h5, h6 {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+                 "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+/* 代码字体 - 等宽字体优先 */
+code, pre, .code-header {
+    font-family: "JetBrains Mono", "Fira Code", "SF Mono", "Menlo",
+                 "Consolas", "Liberation Mono", monospace;
+    font-size: 0.9em;
+}
+
+/* 代码块圆角和阴影 */
+pre {
+    border-radius: 6px;
+    line-height: 1.5;
+}
+
+/* 行内代码样式 */
+code {
+    border-radius: 3px;
+    padding: 0.15em 0.3em;
+}
+
+/* 引用块样式 */
+blockquote {
+    border-left: 4px solid #4a90d9;
+    padding-left: 1em;
+    margin: 1em 0;
+    color: #666;
+}
+
+/* 表格样式 */
+table {
+    border-collapse: collapse;
+    margin: 1em 0;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 0.5em 0.8em;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: 600;
+}
+
+/* 搜索结果中文兼容 */
+.searchresults a {
+    color: inherit;
+}
+
+/* 暗色主题适配 */
+.ayu blockquote {
+    border-left-color: #6a8caf;
+}
+
+.ayu table th {
+    background-color: #2d333b;
+}
+
+/* 链接颜色 */
+a {
+    color: #4a90d9;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+}

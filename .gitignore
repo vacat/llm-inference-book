@@ -9,7 +9,10 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Build artifacts (if any future tooling is added)
+# mdBook build output
+book/
+
+# Other build artifacts
 *.pdf
 *.epub
 node_modules/
