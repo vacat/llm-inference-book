@@ -398,22 +398,58 @@ SwiGLU 的计算：`output = down × (silu(gate × x) ⊙ up × x)`，即 gate �
 
 ---
 
-## 5.6 路由方式：Hash 路由
+## 5.6 路由方式：Hash 路由与学习路由
 
-`n_hash_layer = 3` 表示前 3 层使用 **hash 路由**而非学习的路由。
+DeepSeek V4 Flash 的 43 层中，路由方式分两段：
+
+| 层范围 | 路由方式 | 判断依据 |
+|--------|---------|---------|
+| Layer 0-2（前 3 层） | **Hash 路由** | `n_hash_layer = 3`，这 3 层有 `ffn_gate_tid2eid` 张量 |
+| Layer 3-42（后 40 层） | **学习路由** | `ffn_gate_tid2eid` 不存在，走门控打分 + top-k |
+
+> **源码依据**：权重绑定时，只有 `il < DS4_N_HASH_LAYER` 的层才加载 `ffn_gate_tid2eid`（`ds4.c:5881`）。推理时 `layer_routed_moe_one` 检查 `layer->ffn_gate_tid2eid` 是否存在来决定路由方式（`ds4.c:10809`）。
+
+### 两种路由的区别
 
 ```
-学习路由 (Layer 3-42):
-  gate(x) -> 256 个分数 -> 选 top-6
-  ↑ 需要 gate 权重，有计算开销
+学习路由 (Layer 3-42, 共 40 层):
+  1. matvec(ffn_gate_inp, x) -> 256 个分数  ← 计算矩阵乘法
+  2. softplus + sqrt 激活
+  3. top-6 选择 + 权重归一化
+  ↑ 路由依赖输入内容 x，精度高
+  ↑ 开销: 256×4096 ≈ 100 万次乘加
 
-Hash 路由 (Layer 0-2):
-  hash(token_id) -> 直接映射到专家
-  ↑ 不需要计算，速度更快
-  ↑ 但路由质量略低，所以只用于前几层
+Hash 路由 (Layer 0-2, 共 3 层):
+  1. hash(token_id) -> 查表 ffn_gate_tid2eid -> 直接得到 6 个专家编号
+  ↑ 不需要矩阵乘法，只需一次哈希 + 查表
+  ↑ 路由不依赖输入内容，精度略低但极快
+  ↑ 开销: 几乎为零
 ```
 
-这样做的原因是：前几层主要在做初步特征提取，路由精度要求不高，用 hash 路由可以省计算。后面的层需要精细路由，用学习路由。
+### 为什么前 3 层用 Hash 路由？
+
+前几层 Token 刚经过 Embedding，特征尚未充分分化，学习路由学到的模式有限。用 hash 路由可以：
+- 省掉 3 层的门控矩阵乘法（3 × 100 万 = 300 万次乘加）
+- 路由结果虽然粗糙，但对前几层影响不大
+
+后面的层特征已充分分化，需要精细路由，用学习路由。
+
+### Hash 路由的权重仍用门控概率
+
+即使选择用 hash，专家的**权重**仍通过门控概率计算（`ds4.c:10811`）：
+
+```c
+if (layer->ffn_gate_tid2eid) {
+    layer_hash_selected_experts(selected, model, layer, token);     // hash 选专家
+    layer_hash_router_weights_one(expert_weight, model, layer, x, selected); // 用门控概率算权重
+} else {
+    layer_topk_selected_experts(selected, expert_weight, model, layer, x);  // 学习路由选+算
+}
+```
+
+这样 hash 路由的专家权重质量有保证--选择是 hash 的，但权重不是随机的。
+
+> **GLM 5.2 的差异**：GLM 5.2 的 `n_hash_layer = 0`，全部 79 层都用学习路由，没有 hash 路由。
 
 ---
 
